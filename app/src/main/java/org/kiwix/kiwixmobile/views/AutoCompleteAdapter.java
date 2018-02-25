@@ -16,6 +16,7 @@ import org.kiwix.kiwixlib.JNIKiwix;
 import org.kiwix.kiwixlib.JNIKiwixSearcher;
 import org.kiwix.kiwixmobile.KiwixMobileActivity;
 import org.kiwix.kiwixmobile.ZimContentProvider;
+import org.kiwix.kiwixmobile.utils.SharedPreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,8 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
   private Context context;
 
   @Inject JNIKiwix currentJNIReader;
+  @Inject
+  SharedPreferenceUtil sharedPreferenceUtil;
 
   public AutoCompleteAdapter(Context context) {
     super(context, android.R.layout.simple_list_item_1);
@@ -85,8 +88,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
 	  final String query = constraint.toString();
 
           /* Fulltext search */
-          SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-          if (sharedPreferences.getBoolean(PREF_FULL_TEXT_SEARCH, false)) {
+          if (sharedPreferenceUtil.getBoolean(PREF_FULL_TEXT_SEARCH, false)) {
             ZimContentProvider.jniSearcher.search(query, 200);
             JNIKiwixSearcher.Result result = ZimContentProvider.jniSearcher.getNextResult();
             while (result != null) {

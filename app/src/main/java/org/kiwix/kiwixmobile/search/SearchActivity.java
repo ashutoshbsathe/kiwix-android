@@ -25,6 +25,7 @@ import android.widget.Toast;
 import org.kiwix.kiwixmobile.KiwixApplication;
 import org.kiwix.kiwixmobile.KiwixMobileActivity;
 import org.kiwix.kiwixmobile.R;
+import org.kiwix.kiwixmobile.utils.SharedPreferenceUtil;
 import org.kiwix.kiwixmobile.views.AutoCompleteAdapter;
 
 import java.util.ArrayList;
@@ -50,6 +51,8 @@ public class SearchActivity extends AppCompatActivity
 
   @Inject
   SearchPresenter searchPresenter;
+  @Inject
+  SharedPreferenceUtil sharedPreferenceUtil;
 
   private void setupDagger() {
     KiwixApplication.getInstance().getApplicationComponent().inject(this);
@@ -57,8 +60,7 @@ public class SearchActivity extends AppCompatActivity
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    if (sharedPreferences.getBoolean(PREF_NIGHTMODE, false)) {
+    if (sharedPreferenceUtil.getBoolean(PREF_NIGHTMODE, false)) {
       setTheme(R.style.AppTheme_Night);
     }
     setupDagger();

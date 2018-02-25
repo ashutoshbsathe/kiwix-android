@@ -25,6 +25,7 @@ import org.kiwix.kiwixmobile.KiwixApplication;
 import org.kiwix.kiwixmobile.KiwixMobileActivity;
 import org.kiwix.kiwixmobile.R;
 import org.kiwix.kiwixmobile.settings.KiwixSettingsActivity;
+import org.kiwix.kiwixmobile.utils.SharedPreferenceUtil;
 import org.kiwix.kiwixmobile.views.LanguageSelectDialog;
 import org.kiwix.kiwixmobile.zim_manager.library_view.LibraryFragment;
 
@@ -64,6 +65,8 @@ public class ZimManageActivity extends AppCompatActivity implements ZimManageVie
 
   @Inject
   ZimManagePresenter zimManagePresenter;
+  @Inject
+  SharedPreferenceUtil sharedPreferenceUtil;
 
   private void setupDagger() {
     KiwixApplication.getInstance().getApplicationComponent().inject(this);
@@ -71,13 +74,12 @@ public class ZimManageActivity extends AppCompatActivity implements ZimManageVie
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    if (KiwixSettingsActivity.nightMode(sharedPreferences)) {
+    setupDagger();
+    if (KiwixSettingsActivity.nightMode(sharedPreferenceUtil)) {
       setTheme(R.style.AppTheme_Night);
     }
     super.onCreate(savedInstanceState);
     setContentView(R.layout.zim_manager);
-    setupDagger();
 
     setUpToolbar();
     zimManagePresenter.attachView(this);

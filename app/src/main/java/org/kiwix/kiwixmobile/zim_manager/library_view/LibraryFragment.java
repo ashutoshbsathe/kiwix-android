@@ -41,6 +41,7 @@ import org.kiwix.kiwixmobile.downloader.DownloadService;
 import org.kiwix.kiwixmobile.library.LibraryAdapter;
 import org.kiwix.kiwixmobile.network.KiwixService;
 import org.kiwix.kiwixmobile.utils.NetworkUtils;
+import org.kiwix.kiwixmobile.utils.SharedPreferenceUtil;
 import org.kiwix.kiwixmobile.utils.StorageUtils;
 import org.kiwix.kiwixmobile.utils.StyleUtils;
 import org.kiwix.kiwixmobile.utils.TestingUtils;
@@ -108,6 +109,9 @@ public class LibraryFragment extends Fragment
 
   @Inject
   LibraryPresenter presenter;
+
+  @Inject
+  SharedPreferenceUtil sharedPreferenceUtil;
 
   private void setupDagger() {
     KiwixApplication.getInstance().getApplicationComponent().inject(this);
@@ -318,23 +322,18 @@ public class LibraryFragment extends Fragment
   }
 
   public long getSpaceAvailable() {
-    return new File(PreferenceManager.getDefaultSharedPreferences(super.getActivity())
-        .getString(PREF_STORAGE, Environment.getExternalStorageDirectory()
+    return new File(sharedPreferenceUtil.getString(PREF_STORAGE, Environment.getExternalStorageDirectory()
             .getPath())).getFreeSpace();
   }
 
   @Override
   public void selectionCallback(StorageDevice storageDevice) {
-    SharedPreferences sharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(getActivity());
-    SharedPreferences.Editor editor = sharedPreferences.edit();
-    editor.putString(PREF_STORAGE, storageDevice.getName());
+    sharedPreferenceUtil.putString(PREF_STORAGE, storageDevice.getName());
     if (storageDevice.isInternal()) {
-      editor.putString(PREF_STORAGE_TITLE, getResources().getString(R.string.internal_storage));
+      sharedPreferenceUtil.putString(PREF_STORAGE_TITLE, getResources().getString(R.string.internal_storage));
     } else {
-      editor.putString(PREF_STORAGE_TITLE, getResources().getString(R.string.external_storage));
+      sharedPreferenceUtil.putString(PREF_STORAGE_TITLE, getResources().getString(R.string.external_storage));
     }
-    editor.apply();
   }
 
   public class DownloadServiceConnection {
