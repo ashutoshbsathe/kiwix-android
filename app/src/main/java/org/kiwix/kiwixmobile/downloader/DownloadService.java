@@ -102,7 +102,7 @@ public class DownloadService extends Service {
   public void onCreate() {
     setupDagger();
 
-    SD_CARD = sharedPreferenceUtil.getString(PREF_STORAGE,Environment.getExternalStorageDirectory().getPath());
+    SD_CARD = sharedPreferenceUtil.getPrefStorage();
     KIWIX_ROOT = SD_CARD + "/Kiwix/";
 
     KIWIX_ROOT = checkWritable(KIWIX_ROOT);
@@ -137,7 +137,7 @@ public class DownloadService extends Service {
     }
 
 
-    SD_CARD = sharedPreferenceUtil.getString(PREF_STORAGE,Environment.getExternalStorageDirectory().getPath());
+    SD_CARD = sharedPreferenceUtil.getPrefStorage();
     KIWIX_ROOT = SD_CARD + "/Kiwix/";
 
     KIWIX_ROOT = checkWritable(KIWIX_ROOT);

@@ -2,9 +2,7 @@ package org.kiwix.kiwixmobile.search;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.v4.view.MenuItemCompat;
@@ -36,7 +34,6 @@ import javax.inject.Inject;
 
 import static org.kiwix.kiwixmobile.utils.Constants.EXTRA_IS_WIDGET_VOICE;
 import static org.kiwix.kiwixmobile.utils.Constants.EXTRA_SEARCH;
-import static org.kiwix.kiwixmobile.utils.Constants.PREF_NIGHTMODE;
 import static org.kiwix.kiwixmobile.utils.Constants.TAG_FILE_SEARCHED;
 import static org.kiwix.kiwixmobile.utils.StyleUtils.dialogStyle;
 
@@ -60,7 +57,7 @@ public class SearchActivity extends AppCompatActivity
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    if (sharedPreferenceUtil.getBoolean(PREF_NIGHTMODE, false)) {
+    if (sharedPreferenceUtil.getPrefNightMode()) {
       setTheme(R.style.AppTheme_Night);
     }
     setupDagger();

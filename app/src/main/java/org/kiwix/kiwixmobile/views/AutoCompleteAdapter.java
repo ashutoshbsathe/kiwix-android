@@ -1,9 +1,6 @@
 package org.kiwix.kiwixmobile.views;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.ResultReceiver;
-import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +11,6 @@ import android.widget.TextView;
 
 import org.kiwix.kiwixlib.JNIKiwix;
 import org.kiwix.kiwixlib.JNIKiwixSearcher;
-import org.kiwix.kiwixmobile.KiwixMobileActivity;
 import org.kiwix.kiwixmobile.ZimContentProvider;
 import org.kiwix.kiwixmobile.utils.SharedPreferenceUtil;
 
@@ -22,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import static org.kiwix.kiwixmobile.utils.Constants.PREF_FULL_TEXT_SEARCH;
 
 public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filterable {
 
@@ -88,7 +82,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
 	  final String query = constraint.toString();
 
           /* Fulltext search */
-          if (sharedPreferenceUtil.getBoolean(PREF_FULL_TEXT_SEARCH, false)) {
+          if (sharedPreferenceUtil.getPrefFullTextSearch()) {
             ZimContentProvider.jniSearcher.search(query, 200);
             JNIKiwixSearcher.Result result = ZimContentProvider.jniSearcher.getNextResult();
             while (result != null) {

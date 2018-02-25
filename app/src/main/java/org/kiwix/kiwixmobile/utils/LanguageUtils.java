@@ -65,7 +65,7 @@ public class LanguageUtils {
   }
 
   public static void handleLocaleChange(Context context, SharedPreferenceUtil sharedPreferenceUtil) {
-    String language = sharedPreferenceUtil.getString(PREF_LANG, "");
+    String language = sharedPreferenceUtil.getPrefLanguage("");
 
     if (language.isEmpty()) {
       return;
@@ -193,7 +193,7 @@ public class LanguageUtils {
       }
 
       // Don't change the language, if the options hasn't been set
-      String language = sharedPreferenceUtil.getString(PREF_LANG, "");
+      String language = sharedPreferenceUtil.getPrefLanguage("");
 
       if (language.isEmpty()) {
         return false;

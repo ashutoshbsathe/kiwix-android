@@ -139,10 +139,10 @@ public class KiwixWebView extends WebView {
   public void loadPrefs() {
     disableZoomControls();
 
-    boolean zoomEnabled = sharedPreferenceUtil.getBoolean(PREF_ZOOM_ENABLED, false);
+    boolean zoomEnabled = sharedPreferenceUtil.getPrefZoomEnabled();
 
     if (zoomEnabled) {
-      int zoomScale = (int) sharedPreferenceUtil.getFloat(PREF_ZOOM, 100.0f);
+      int zoomScale = (int) sharedPreferenceUtil.getPrefZoom();
       setInitialScale(zoomScale);
     } else {
       setInitialScale(0);

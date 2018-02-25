@@ -110,7 +110,7 @@ public class DownloadFragment extends Fragment {
             .setTitle(R.string.wifi_only_title)
             .setMessage(R.string.wifi_only_msg)
             .setPositiveButton(R.string.yes, (dialog, i) -> {
-                      sharedPreferenceUtil.putBoolean(PREF_WIFI_ONLY, false);
+                      sharedPreferenceUtil.putPrefWifiOnly(false);
               KiwixMobileActivity.wifiOnly = false;
               yesAction.run();
             })

@@ -20,7 +20,6 @@
 package org.kiwix.kiwixmobile.settings;
 
 import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -68,7 +66,6 @@ import static org.kiwix.kiwixmobile.utils.Constants.PREF_CREDITS;
 import static org.kiwix.kiwixmobile.utils.Constants.PREF_LANG;
 import static org.kiwix.kiwixmobile.utils.Constants.PREF_NIGHTMODE;
 import static org.kiwix.kiwixmobile.utils.Constants.PREF_STORAGE;
-import static org.kiwix.kiwixmobile.utils.Constants.PREF_STORAGE_TITLE;
 import static org.kiwix.kiwixmobile.utils.Constants.PREF_VERSION;
 import static org.kiwix.kiwixmobile.utils.Constants.PREF_WIFI_ONLY;
 import static org.kiwix.kiwixmobile.utils.Constants.PREF_ZOOM;
@@ -136,13 +133,13 @@ public class KiwixSettingsActivity extends AppCompatActivity {
   }
 
   public static boolean nightMode(SharedPreferenceUtil sharedPreferenceUtil){
-    boolean autoNightMode = sharedPreferenceUtil.getBoolean(PREF_AUTONIGHTMODE, false);
+    boolean autoNightMode = sharedPreferenceUtil.getPrefAutoNightMode();
     if(autoNightMode){
       Calendar cal = Calendar.getInstance();
       int hour = cal.get(Calendar.HOUR_OF_DAY);
       return hour < DAWN_HOUR || hour > DUSK_HOUR;
     } else{
-      return sharedPreferenceUtil.getBoolean(PREF_NIGHTMODE, false);
+      return sharedPreferenceUtil.getPrefAutoNightMode();
     }
   }
 
@@ -164,7 +161,7 @@ public class KiwixSettingsActivity extends AppCompatActivity {
       setupDagger();
       addPreferencesFromResource(R.xml.preferences);
 
-      boolean auto_night_mode = sharedPreferenceUtil.getBoolean(PREF_AUTONIGHTMODE, false);
+      boolean auto_night_mode = sharedPreferenceUtil.getPrefAutoNightMode();
 
       if(auto_night_mode){
         getPreferenceScreen().findPreference(PREF_NIGHTMODE).setEnabled(false);
@@ -199,14 +196,11 @@ public class KiwixSettingsActivity extends AppCompatActivity {
         getPreferenceScreen().removePreference(getPrefrence("pref_storage"));
       } else {
         if (Environment.isExternalStorageEmulated()) {
-          getPrefrence(PREF_STORAGE).setTitle(sharedPreferenceUtil
-              .getString(PREF_STORAGE_TITLE, "Internal"));
+          getPrefrence(PREF_STORAGE).setTitle(sharedPreferenceUtil.getPrefStorageTitle("Internal"));
         } else {
-          getPrefrence(PREF_STORAGE).setTitle(sharedPreferenceUtil
-              .getString(PREF_STORAGE_TITLE, "External"));
+          getPrefrence(PREF_STORAGE).setTitle(sharedPreferenceUtil.getPrefStorageTitle("External"));
         }
-        getPrefrence(PREF_STORAGE).setSummary(LibraryUtils.bytesToHuman( new File(sharedPreferenceUtil
-            .getString(PREF_STORAGE, Environment.getExternalStorageDirectory().getPath())).getFreeSpace()));
+        getPrefrence(PREF_STORAGE).setSummary(LibraryUtils.bytesToHuman( new File(sharedPreferenceUtil.getPrefStorage()).getFreeSpace()));
       }
     }
 
@@ -240,7 +234,7 @@ public class KiwixSettingsActivity extends AppCompatActivity {
 
     private void setUpLanguageChooser(String preferenceId) {
       Preference languagePref = getPrefrence(preferenceId);
-      String selectedLang = sharedPreferenceUtil.getString(PREF_LANG, Locale.getDefault().toString());
+      String selectedLang = sharedPreferenceUtil.getPrefLanguage(Locale.getDefault().toString());
 
       languagePref.setTitle(new Locale(selectedLang).getDisplayLanguage());
     }
@@ -335,14 +329,14 @@ public class KiwixSettingsActivity extends AppCompatActivity {
 
     public void openLanguageSelect() {
       LanguageUtils languageUtils = new LanguageUtils(getActivity());
-      String selectedLang = sharedPreferenceUtil.getString(PREF_LANG, Locale.getDefault().toString());
+      String selectedLang = sharedPreferenceUtil.getPrefLanguage(Locale.getDefault().toString());
 
       new LanguageSelectDialog.Builder(getActivity(), dialogStyle())
           .setLanguages(languageUtils.getLanguageList())
           .setSingleSelect(true)
           .setSelectedLanguage(selectedLang)
           .setOnLanguageSelectedListener((languageCode -> {
-            sharedPreferenceUtil.putString(PREF_LANG, languageCode);
+            sharedPreferenceUtil.putPrefLanguage(languageCode);
 
             LanguageUtils.handleLocaleChange(getActivity(), languageCode);
             // Request a restart when the user returns to the Activity, that called this Activity
@@ -367,13 +361,13 @@ public class KiwixSettingsActivity extends AppCompatActivity {
     @Override
     public void selectionCallback(StorageDevice storageDevice) {
       findPreference(PREF_STORAGE).setSummary(storageDevice.getSize());
-      sharedPreferenceUtil.putString(PREF_STORAGE,storageDevice.getName());
+      sharedPreferenceUtil.putPrefStorage(storageDevice.getName());
       if (storageDevice.isInternal()) {
         findPreference(PREF_STORAGE).setTitle(getResources().getString(R.string.internal_storage));
-        sharedPreferenceUtil.putString(PREF_STORAGE_TITLE, getResources().getString(R.string.internal_storage));
+        sharedPreferenceUtil.putPrefStorageTitle(getResources().getString(R.string.internal_storage));
       } else {
         findPreference(PREF_STORAGE).setTitle(getResources().getString(R.string.external_storage));
-        sharedPreferenceUtil.putString(PREF_STORAGE_TITLE, getResources().getString(R.string.external_storage));
+        sharedPreferenceUtil.putPrefStorageTitle(getResources().getString(R.string.external_storage));
       }
     }
   }
