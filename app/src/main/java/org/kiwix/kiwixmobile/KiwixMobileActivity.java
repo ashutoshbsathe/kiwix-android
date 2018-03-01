@@ -1173,6 +1173,10 @@ public class KiwixMobileActivity extends BaseActivity implements WebViewCallback
     //Check maybe need refresh
     String article = getCurrentWebView().getUrl();
     boolean isBookmark = false;
+    if(article.equals("file:///android_asset/help.html")) {
+      Toast.makeText(KiwixMobileActivity.this, "You cannot bookmark the help page !", Toast.LENGTH_LONG).show();
+      return;
+    }
     if (article != null && !bookmarks.contains(article)) {
       saveBookmark(article, getCurrentWebView().getTitle());
       isBookmark = true;
